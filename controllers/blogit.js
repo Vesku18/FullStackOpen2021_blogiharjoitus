@@ -16,8 +16,7 @@ blogitRouter.get('/:id', async (request, response) => {
   })
 
 blogitRouter.put('/update/:id', async (request, response, next) => {
-    console.log("Arvoilla????", request.body)
-    const ob = await Blog.findByIdAndUpdate(request.params.id,{likes: 100},{ new: true } )
+    const ob = await Blog.findByIdAndUpdate(request.params.id,request.body,{ new: true } )
     console.log("päivityksen jälkeen", ob)
     response.json(ob)
   })

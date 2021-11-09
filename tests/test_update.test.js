@@ -18,14 +18,10 @@ beforeEach(async() => {
 test('update likes', async () => {
     const res = await api.get('/')
     let obToUpdate = res.body[0]
-    obToUpdate['likes'] = 50
-    console.log("Näm olis tulossa",obToUpdate)
-
-    
-
+    obToUpdate['likes'] = 500
     const prom = await api.put(`/update/${obToUpdate.id}`)
                           .send(obToUpdate)
-    expect(prom.body.likes).toEqual(100)
+    expect(prom.body.likes).toEqual(500)
 })
 
 
