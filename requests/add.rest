@@ -1,0 +1,9 @@
+POST http://localhost:3001/add
+Content-Type: application/json
+
+{
+    "title": "Lampaan",
+    "author": "Vesa",
+    "url": "Ylefi",
+    "likes": 123
+}
