@@ -23,7 +23,7 @@ mongoose.connect(config.MONGODB_URI)
 
 
 app.use('/', blogitRouter)
-app.use('/user', userRouter)
+app.use('/haloo', userRouter)
 app.use(cors())
 app.use(express.json())
 

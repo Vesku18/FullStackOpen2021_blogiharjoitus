@@ -4,10 +4,11 @@ const config = require('../utils/config')
 const logger = require('../utils/logger')
 
 const Blog = require('../model/blog.js')
+const User = require('../model/user.js')
 
 blogitRouter.get('/', async (request, response) => {
-    const lista = await Blog.find({})
-    response.json(lista).end()
+    const lista = await Blog.find({}).populate('user')
+    response.json(lista.map(u => u.toJSON())).end()
   })
 
 blogitRouter.get('/:id', async (request, response) => {
@@ -23,10 +24,22 @@ blogitRouter.put('/update/:id', async (request, response, next) => {
   
 blogitRouter.post('/', async (request, response, next) => {
   logger.info('Add start')
+  const body = request.body
+
+  user = await User.findById(body.userId)
+  body.user = user._id
+  console.log("userille",body.user)
+
   try {
     const blogObject = new Blog(request.body)  
     const blogSaved = await blogObject.save()
     response.status(201).json(blogSaved)
+
+    console.log("talletettu olio", blogSaved)
+
+    user.blogs = user.blogs.concat(blogSaved._id)
+    await user.save()
+
   } catch (exeption) {
     response.status(400).end()
   }

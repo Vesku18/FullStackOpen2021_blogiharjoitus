@@ -63,6 +63,7 @@ const several = [
 const addOne = async () => {
     const n = new Blog(oneBlog)
     const response = await n.save()
+    return json(response)
 }
 
 const addSeveralInDb = async () => {
