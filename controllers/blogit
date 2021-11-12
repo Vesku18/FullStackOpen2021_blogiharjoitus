@@ -1,0 +1,63 @@
+const blogitRouter = require('express').Router()
+
+const config = require('../utils/config')
+const logger = require('../utils/logger')
+
+const Blog = require('../model/blog')
+const User = require('../model/user')
+
+const jwt = require('jsonwebtoken')
+
+blogitRouter.get('/', async (request, response) => {
+    const lista = await Blog.find({}).populate('user')
+    response.json(lista.map(u => u.toJSON())).end()
+  })
+
+blogitRouter.get('/:id', async (request, response) => {
+    const ob = await Blog.findById(request.params.id)
+    response.json(ob)
+  })
+
+blogitRouter.put('/update/:id', async (request, response, next) => {
+    const ob = await Blog.findByIdAndUpdate(request.params.id,request.body,{ new: true } )
+    console.log("päivityksen jälkeen", ob)
+    response.json(ob)
+  })
+  
+blogitRouter.post('/', async (request, response, next) => {
+  logger.info('Add start')
+  const body = request.body  
+  body.user = request.userObject._id
+  console.log("userille",body.user)
+
+  try {
+    const blogObject = new Blog(request.body)  
+    const blogSaved = await blogObject.save()
+      
+      response.status(201).json(blogSaved)
+
+    console.log("talletettu olio", blogSaved)
+
+    user.blogs = user.blogs.concat(blogSaved._id)
+    await user.save()
+
+  } catch (exeption) {
+    response.status(400).end()
+  }
+})
+
+blogitRouter.delete('/:id', async (request, response, next) => {
+  console.log("poistetaan :" , request.params.id)
+  const toBeRemoved = await Blog.findById(request.params.id)
+  console.log('tämä:',toBeRemoved.user._id.toString())
+  const owner = toBeRemoved.user._id.toString() 
+  const sender = request.userObject._id.toString()
+  if (owner === sender) {
+    await Blog.findByIdAndRemove(request.params.id)
+    response.status(204).end()
+  } else {
+    return response.status(400).json({ error: 'Only owner can delete.Item not deleted' })  
+  }
+})
+  
+module.exports = blogitRouter
