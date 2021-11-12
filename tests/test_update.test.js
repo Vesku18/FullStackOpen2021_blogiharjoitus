@@ -1,3 +1,4 @@
+const config = require('../utils/config.js')
 const { TestWatcher } = require('@jest/core')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
@@ -6,7 +7,7 @@ const app = require('../app')
 
 const api = supertest(app)
 const helper = require('../tests/test_helper.js')
-const Blog = require('../model/blog.js')
+const Blog = require('../model/blog')
 
 
 beforeEach(async() => {
@@ -17,10 +18,12 @@ beforeEach(async() => {
 
 test('update likes', async () => {
     const res = await api.get('/')
+                        .set('Authorization',config.TEST_TOKEN)
     let obToUpdate = res.body[0]
     obToUpdate['likes'] = 500
     const prom = await api.put(`/update/${obToUpdate.id}`)
-                          .send(obToUpdate)
+                           .set('Authorization',config.TEST_TOKEN)
+                           .send(obToUpdate)
     expect(prom.body.likes).toEqual(500)
 })
 

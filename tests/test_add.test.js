@@ -1,3 +1,4 @@
+const config = require('../utils/config.js')
 const { TestWatcher } = require('@jest/core')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
@@ -5,7 +6,7 @@ const app = require('../app')
 
 const api = supertest(app)
 
-const Blog = require('../model/blog.js')
+const Blog = require('../model/blog')
 const User = require('../model/user')
 const helper = require('./test_helper.js')
 
@@ -18,7 +19,9 @@ test('add and check they are more',  async () =>{
 
   console.log("Menossa:", helper.oneBlog)
   const notesAtStart = await Blog.find({}) 
-  responseObject = await api.post('/').send(helper.oneBlog)    
+  responseObject = await api.post('/')
+                            .set('Authorization',config.TEST_TOKEN)
+                            .send(helper.oneBlog)    
   console.log("Talletettu:", responseObject.body)
 
   const notesAtEnd = await Blog.find({})  
@@ -27,7 +30,9 @@ test('add and check they are more',  async () =>{
 
 test('do not add blog without required values', async () =>{
 
-    const newO = await api.post('/').send(helper.oneBlogWithoutTitleUrl) 
+    const newO = await api.post('/')
+    .set('Authorization',config.TEST_TOKEN)
+    .send(helper.oneBlogWithoutTitleUrl) 
     console.log(newO.error)
     expect(400)
   })

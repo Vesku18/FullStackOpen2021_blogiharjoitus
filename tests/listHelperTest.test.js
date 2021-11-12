@@ -1,7 +1,7 @@
 const listHelper = require('../utils/list_helper')
 
 const mongoose = require('mongoose')
-const Blog = require('../model/blog.js')
+const Blog = require('../model/blog')
 
 
 
