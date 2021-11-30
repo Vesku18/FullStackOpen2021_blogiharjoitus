@@ -1,0 +1,10 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlZla3NpIiwiaWQiOiI2MThiOWJjOTAxYTNkYWVhN2E2NGI3MWEiLCJpYXQiOjE2MzY1ODM5Mjl9.SokJAesGALg9dU7hFC8diA6gpMpf6jgFURcE5PE3RvU
+
+{
+    "title": "Lampaan",
+    "author": "Taksi",
+    "url": "Ylefi",
+    "likes": 123
+}
